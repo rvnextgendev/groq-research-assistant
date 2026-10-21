@@ -38,3 +38,16 @@ def test_chat_and_download():
         assert len(app.get("download_button")) == 1
         app.sidebar.button[1].click().run()
         assert app.session_state["messages"] == []
+
+
+def test_switching_backend_clears_old_service():
+    with patch("research_assistant.ui.Settings.load", return_value=Settings("test", "test")):
+        app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=15)
+        app.session_state["service"] = object()
+        app.session_state["document_stats"] = "1 page"
+        app.session_state["messages"] = [{"role": "user", "content": "old question"}]
+        app.run()
+        app.sidebar.selectbox[0].select("LangGraph").run()
+        assert not app.exception
+        assert app.chat_input[0].disabled
+        assert app.session_state["messages"] == []

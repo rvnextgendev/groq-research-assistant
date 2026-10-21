@@ -7,6 +7,7 @@ from research_assistant.agent import ResearchService
 from research_assistant.config import Settings
 from research_assistant.documents import build_index
 from research_assistant.errors import ResearchError
+from research_assistant.langgraph_agent import LangGraphResearchService
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,10 @@ def run():
         return
 
     with st.sidebar:
+        # Changing engines discards the previous service and conversation so that
+        # subsequent answers cannot silently come from the old implementation.
+        backend = st.selectbox("Agent implementation", ["LangChain ReAct", "LangGraph"],
+                               on_change=clear_document)
         st.header("Your document")
         uploaded = st.file_uploader("Upload a PDF", type=["pdf"], on_change=clear_document)
         st.caption(f"Up to {settings.max_upload_mb} MB and {settings.max_pages} pages. Text PDFs only.")
@@ -51,7 +56,8 @@ def run():
         try:
             with st.spinner("Reading PDF and building its search index..."):
                 index = build_index(uploaded.getvalue(), settings)
-                service = ResearchService.create(index, settings)
+                service_class = LangGraphResearchService if backend == "LangGraph" else ResearchService
+                service = service_class.create(index, settings)
             # Publish the service only after indexing and agent construction succeed.
             # Session state avoids rebuilding on reruns without sharing users' PDFs.
             st.session_state.update(service=service,

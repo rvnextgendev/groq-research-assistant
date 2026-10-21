@@ -54,6 +54,7 @@ research_assistant/
   tools.py                     PDF retrieval and bounded Serper requests
   prompts.py                   Research instructions and citation format
   agent.py                     ReAct service, history and error boundaries
+  langgraph_agent.py            Explicit StateGraph model/tool loop
   errors.py                    Safe application exceptions
   ui.py                        Uploads, session state, chat and downloads
 tests/                         Offline service and Streamlit UI tests
@@ -62,6 +63,28 @@ sample_documents/              Fictional PDF for manual UI testing
 Dockerfile                     Non-root container with health check
 .github/workflows/ci.yml        Lint and tests
 ```
+
+## Compare LangChain and LangGraph
+
+Both implementations are included and share the same PDF indexing, Serper tool, Groq configuration, and chat UI. The existing `agent.py` remains the default.
+
+1. Install the updated dependencies: `python -m pip install -r requirements.txt`.
+2. Start the app: `python -m streamlit run app.py`.
+3. Select **LangChain ReAct** or **LangGraph** under **Agent implementation** in the sidebar.
+4. Upload the sample PDF, select **Process PDF**, and try the example questions above.
+5. To compare the other engine, change the selector and click **Process PDF** again. Switching engines clears the old service and conversation; the selected upload remains available.
+
+| Detail | LangChain ReAct (`agent.py`) | LangGraph (`langgraph_agent.py`) |
+|---|---|---|
+| Model decisions | Textual `Action` / `Action Input` parsed by the executor | Structured `AIMessage.tool_calls` from `bind_tools` |
+| Execution loop | `create_react_agent` and `AgentExecutor` | Explicit `StateGraph` model and tools nodes |
+| Tool result context | `agent_scratchpad` in the prompt | `ToolMessage` entries appended to `MessagesState` |
+| Stop condition | Final answer or executor limit | No tool calls, round limit, deadline, or graph recursion limit |
+| Session context | Bounded history supplied by UI | Bounded history supplied by UI; no shared checkpointer |
+
+The LangGraph path is `START -> model -> tools -> model`, repeating as needed, then `model -> END` when the response has no tool calls. Conditional edges inspect the model response; the model still chooses PDF search, web search, or both. The graph has an eight-tool-round limit, at most eight calls per round, a cooperative 120-second deadline, and a 20-step recursion ceiling. Provider calls have their own timeouts. Use a Groq model that supports structured tool calling for this backend. The classic prompt is not reused: `GRAPH_SYSTEM_PROMPT` replaces the textual ReAct format.
+
+Both backends return the same answer/tool-label structure. Offline tests verify graph routing and termination; a live comparison requires your API keys. See the official [LangGraph quickstart](https://docs.langchain.com/oss/python/langgraph/quickstart) for graph concepts.
 
 ## Configuration and data handling
 
