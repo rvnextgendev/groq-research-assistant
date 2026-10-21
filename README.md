@@ -2,6 +2,8 @@
 
 A modular Streamlit application combining PDF retrieval (local embeddings and FAISS) with Groq and Serper web search. The agent can use either source or both. Answers include requested page/URL citations, tool names, follow-up context, and a conversation download.
 
+New to the code? Read the [beginner's implementation guide](docs/IMPLEMENTATION_GUIDE.md) for step-by-step LangChain and LangGraph explanations, `agent_scratchpad` versus message state, and easy PDF/web examples.
+
 ## Run locally
 
 Python 3.11 is the tested runtime.
