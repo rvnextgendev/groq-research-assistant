@@ -1,5 +1,11 @@
+"""Shared routing, evidence, and output instructions for the research agent."""
 from langchain_core.prompts import PromptTemplate
 
+# ReAct requires tools, tool_names, and agent_scratchpad template variables.
+# LangChain fills the scratchpad with preceding tool actions and observations;
+# the service supplies the question and bounded chat history for each request.
+# Routing and citation instructions guide the model; they are not hard guarantees
+# or an isolation boundary against malicious retrieved content.
 RESEARCH_PROMPT = PromptTemplate.from_template("""You are a research assistant.
 Available tools:
 {tools}

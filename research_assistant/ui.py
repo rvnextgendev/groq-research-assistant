@@ -12,11 +12,13 @@ logger = logging.getLogger(__name__)
 
 
 def clear_document():
+    """Discard the active index and related chat when the uploaded file changes."""
     for key in ("service", "document_stats", "messages"):
         st.session_state.pop(key, None)
 
 
 def run():
+    """Render the app; Streamlit reruns this function on widget interactions."""
     st.set_page_config(page_title="Research Assistant", page_icon=":books:", layout="wide")
     st.title("Research Assistant")
     st.caption("Ask your PDF, explore the web, or compare both - powered by Groq.")
@@ -24,6 +26,7 @@ def run():
         try:
             secrets = dict(st.secrets)
         except FileNotFoundError:
+            # Local use needs only .env; a Streamlit secrets file is optional.
             secrets = {}
         settings = Settings.load(secrets)
     except ResearchError as exc:
@@ -43,16 +46,20 @@ def run():
             st.session_state["messages"] = []
 
     if process and uploaded is not None:
+        # Discard the old index first so failed processing cannot use stale evidence.
         clear_document()
         try:
             with st.spinner("Reading PDF and building its search index..."):
                 index = build_index(uploaded.getvalue(), settings)
                 service = ResearchService.create(index, settings)
+            # Publish the service only after indexing and agent construction succeed.
+            # Session state avoids rebuilding on reruns without sharing users' PDFs.
             st.session_state.update(service=service,
                 document_stats=f"{index.page_count} pages / {index.chunk_count} chunks", messages=[])
         except ResearchError as exc:
             st.error(str(exc))
         except Exception as exc:
+            # Avoid logging document contents or provider exception messages.
             logger.warning("Index creation failed: %s", type(exc).__name__)
             st.error("Could not prepare the document. Check embedding download, model configuration, and memory.")
 
@@ -62,6 +69,7 @@ def run():
     else:
         st.success(f"Document ready: {st.session_state['document_stats']}")
     messages = st.session_state.setdefault("messages", [])
+    # Redraw completed exchanges from this session on every rerun.
     for item in messages:
         with st.chat_message(item["role"]):
             st.markdown(item["content"])
@@ -75,13 +83,17 @@ def run():
         try:
             with st.spinner("Researching..."):
                 answer = service.ask(question, messages)
+            # Store only successful exchanges, leaving failed questions retryable.
             messages.extend([{"role": "user", "content": question},
                 {"role": "assistant", "content": answer.text, "tools": ", ".join(answer.tools_used)}])
+            # Bound server-side history as well as the context sent to the model.
             del messages[:-40]
+            # Re-render from saved state so the transcript and tool labels stay aligned.
             st.rerun()
         except ResearchError as exc:
             st.error(str(exc))
 
     if messages:
+        # Generate each user's download in memory rather than a shared server file.
         transcript = "\n\n".join(f"{m['role'].title()}: {m['content']}" for m in messages)
         st.download_button("Download conversation", transcript, "research.txt", "text/plain")
