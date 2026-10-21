@@ -1,0 +1,2 @@
+# Preserve PDF byte offsets and prevent newline conversion.
+*.pdf binary

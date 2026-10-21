@@ -18,6 +18,32 @@ Open http://localhost:8501, upload a PDF, click **Process PDF**, and ask a quest
 
 Examples: "What does this document say about revenue?"; "Compare this with current industry growth."
 
+## Try the included sample PDF
+
+Use [research_assistant_test.pdf](sample_documents/research_assistant_test.pdf), a three-page report with fictional company data. On GitHub, open the PDF and use **Download raw file** to save it to your computer. Do not treat its figures as real company or industry data.
+
+1. Open the local app at http://localhost:8501 or your deployed Streamlit app. Configure Groq and Serper keys first; see the configuration and deployment sections below.
+2. In the sidebar, upload `research_assistant_test.pdf` and click **Process PDF**. The first run may take longer while the embedding model downloads.
+3. Wait for **Document ready**, then enter the questions below in the chat box.
+4. Check page citations and the **Sources searched** label beneath each answer.
+5. Ask a follow-up question, use **Download conversation** to export the chat, or **Clear chat** to start a new conversation about the same PDF.
+
+| What to test | Example question | Expected evidence or behavior |
+|---|---|---|
+| PDF retrieval | What was revenue growth in 2025? Cite the PDF page. | 34 percent; page 1; `pdf_knowledge_base`. |
+| PDF retrieval | Explain the RAG workflow described in this report. | PDF extraction, 1,000-character chunks with 200-character overlap, local embeddings, FAISS, up to four retrieved chunks, Groq and Serper; page 2. |
+| Target versus result | What is the 2026 revenue target? Has it been achieved? | USD 16 million is a target; the report does not establish that it was achieved; page 3. |
+| Missing evidence | What was the company's net profit? | The report does not provide net profit; page 3. The agent should not invent a number. |
+| Web search | Search the web for the latest LangChain release and include source URLs. | `web_search`; an answer based on live search results with URLs. Results change over time. |
+| PDF and web | Compare the RAG design in this PDF with current guidance in official LangChain documentation. Search both sources. | Both `pdf_knowledge_base` and `web_search`, with PDF page citations and web URLs. |
+| Follow-up context | Explain your previous answer in simpler terms. | An explanation that refers to the preceding exchange. |
+
+### How the agent chooses tools
+
+Groq receives your question, recent conversation, tool descriptions, and the research prompt. The prompt directs it to search the PDF for document-specific questions, the web for current facts, and both for comparisons. The ReAct executor runs the selected tool, returns its results to the model, and repeats until the model answers or reaches a configured limit. Routing is model-driven and may vary; **Sources searched** reports the tools actually called, rather than guaranteeing which tool a question will select.
+
+The fictional Northstar Analytics company is not intended to be found online. Use web search to research its technologies or compare the described architecture, rather than trying to verify its invented financial figures.
+
 ## Structure
 
 ```text
@@ -31,6 +57,7 @@ research_assistant/
   errors.py                    Safe application exceptions
   ui.py                        Uploads, session state, chat and downloads
 tests/                         Offline service and Streamlit UI tests
+sample_documents/              Fictional PDF for manual UI testing
 .streamlit/                    UI/server configuration and secrets template
 Dockerfile                     Non-root container with health check
 .github/workflows/ci.yml        Lint and tests

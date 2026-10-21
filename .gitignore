@@ -7,3 +7,4 @@ answer.txt
 .pytest_cache/
 .ruff_cache/
 *.pdf
+!sample_documents/research_assistant_test.pdf

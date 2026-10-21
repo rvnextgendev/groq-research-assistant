@@ -1,0 +1,168 @@
+%PDF-1.3
+%‚„œ”
+1 0 obj
+<<
+/Producer (pypdf)
+/Title (Research Assistant Test Report)
+/Author (Sample test data)
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Count 3
+/Kids [ 5 0 R 7 0 R 9 0 R ]
+>>
+endobj
+3 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+4 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+5 0 obj
+<<
+/Type /Page
+/Resources <<
+/Font <<
+/F1 4 0 R
+>>
+>>
+/MediaBox [ 0.0 0.0 612 792 ]
+/Parent 2 0 R
+/Contents 6 0 R
+>>
+endobj
+6 0 obj
+<<
+/Length 736
+>>
+stream
+BT /F1 11 Tf 48 738 Td 19 TL
+(NORTHSTAR ANALYTICS - SAMPLE RESEARCH REPORT) Tj T*
+(Fictional company data for testing only. Reporting year: 2025.) Tj T*
+() Tj T*
+(1. Company overview and financial results) Tj T*
+(Northstar Analytics builds analytics software for small businesses.) Tj T*
+(Revenue in 2024: USD 10 million.) Tj T*
+(Revenue in 2025: USD 13.4 million.) Tj T*
+(Year-over-year revenue growth in 2025: 34 percent.) Tj T*
+(Gross margin in 2025: 72 percent.) Tj T*
+(Customers at year end: 1,200.) Tj T*
+(Customer retention rate: 92 percent.) Tj T*
+(The largest customer segment is retail, followed by healthcare.) Tj T*
+() Tj T*
+(These figures are invented and are not investment guidance.) Tj T*
+() Tj T*
+(Page 1 of 3) Tj T*
+ET
+endstream
+endobj
+7 0 obj
+<<
+/Type /Page
+/Resources <<
+/Font <<
+/F1 4 0 R
+>>
+>>
+/MediaBox [ 0.0 0.0 612 792 ]
+/Parent 2 0 R
+/Contents 8 0 R
+>>
+endobj
+8 0 obj
+<<
+/Length 968
+>>
+stream
+BT /F1 11 Tf 48 738 Td 19 TL
+(2. AI strategy and research assistant architecture) Tj T*
+() Tj T*
+(The company plans a PDF research assistant using retrieval augmented) Tj T*
+(generation \(RAG\). Text is extracted from uploaded PDF documents.) Tj T*
+(Documents are split into chunks of 1,000 characters with 200-character) Tj T*
+(overlap. Local embeddings are stored in a FAISS vector index.) Tj T*
+(For each document query, the retriever returns up to four chunks.) Tj T*
+(Groq generates answers using the retrieved evidence.) Tj T*
+(Serper provides web search for recent information and comparisons.) Tj T*
+(The agent can search the PDF, search the web, or use both tools.) Tj T*
+(Document answers should cite PDF page numbers.) Tj T*
+(Web answers should cite source URLs.) Tj T*
+() Tj T*
+(Uploaded PDFs and chat are held in session memory, not durable storage.) Tj T*
+(Scanned image-only PDFs require OCR before text retrieval.) Tj T*
+() Tj T*
+(Page 2 of 3) Tj T*
+ET
+endstream
+endobj
+9 0 obj
+<<
+/Type /Page
+/Resources <<
+/Font <<
+/F1 4 0 R
+>>
+>>
+/MediaBox [ 0.0 0.0 612 792 ]
+/Parent 2 0 R
+/Contents 10 0 R
+>>
+endobj
+10 0 obj
+<<
+/Length 1026
+>>
+stream
+BT /F1 11 Tf 48 738 Td 19 TL
+(3. Risks, targets, and missing information) Tj T*
+() Tj T*
+(The 2026 revenue target is USD 16 million. This is a target, not a result.) Tj T*
+(The main risks are customer churn, API outages, and incorrect citations.) Tj T*
+(Before public deployment, the team plans authentication, rate limits,) Tj T*
+(and testing under concurrent user load.) Tj T*
+(The report does not state net profit, employee count, or market share.) Tj T*
+(It does not provide industry growth averages or current market news.) Tj T*
+(The report does not claim that its fictional company exists online.) Tj T*
+() Tj T*
+(Suggested testing questions:) Tj T*
+(What was revenue growth in 2025? Cite the PDF page.) Tj T*
+(Explain the RAG workflow described in this report.) Tj T*
+(What is the 2026 revenue target, and is it an achieved result?) Tj T*
+(What was net profit? State whether the report provides this figure.) Tj T*
+(Compare this fictional RAG design with current guidance online.) Tj T*
+() Tj T*
+(Page 3 of 3) Tj T*
+ET
+endstream
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000015 00000 n 
+0000000121 00000 n 
+0000000192 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+0000000443 00000 n 
+0000001230 00000 n 
+0000001362 00000 n 
+0000002381 00000 n 
+0000002514 00000 n 
+trailer
+<<
+/Size 11
+/Root 3 0 R
+/Info 1 0 R
+>>
+startxref
+3593
+%%EOF
